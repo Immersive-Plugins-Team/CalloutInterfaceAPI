@@ -73,5 +73,16 @@
     <Analyzer Include="..\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
     <Analyzer Include="..\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="README.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>set Version=@(VersionNumber)
+set OutputDir=.\Releases
+if exist "%25ZipFile%25" del "%25ZipFile%25"
+set ZipFile=%25OutputDir%25\CalloutInterfaceHelper-$(Version).zip
+"%25ProgramFiles%25\7-Zip\7z.exe" a "%25ZipFile%25" "$(TargetDir)CalloutInterfaceHelper.dll" "$(ProjectDir)README.txt"
+</PostBuildEvent>
+  </PropertyGroup>
 </Project>
