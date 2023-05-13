@@ -27,7 +27,7 @@ namespace ExampleNamespace
     public class ExampleCallout : Callout
 ```
 
-Note that the priority and agency are optional but you must provide a description.  This is what will show up in the CalloutInterface log, so it should be concise and reflect the general nature of your callout.  It does not need to be unique.
+Note that the priority and agency are optional but you *must* provide a description.  This is what will show up in the CalloutInterface log, so it should be concise and reflect the general nature of your callout.  It does not need to be unique.
 
 ![Description Example](https://i.imgur.com/yX3GkKX.png)
 
