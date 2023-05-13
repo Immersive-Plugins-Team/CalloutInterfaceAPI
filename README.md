@@ -52,4 +52,4 @@ Please join my [discord server](https://discord.gg/AuJCUag) and open a ticket fo
 
 ## Special Thanks
 
-Thanks to [Dlyann24](https://github.com/Dylann24) for being an early adopter!
+Thanks to [Dylann24](https://github.com/Dylann24) for being an early adopter!
