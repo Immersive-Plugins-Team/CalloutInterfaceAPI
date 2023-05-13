@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace CalloutInterfaceHelper
 {
@@ -12,6 +13,7 @@ namespace CalloutInterfaceHelper
                 .Any(x => x.GetName().Name.Equals("CalloutInterface"));
         }
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void SendCalloutDetails(LSPD_First_Response.Mod.Callouts.Callout callout, string priority, string agency)
         {
             if (isCalloutInterfaceAvailable)
@@ -20,6 +22,7 @@ namespace CalloutInterfaceHelper
             }
         }
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void SendMessage(LSPD_First_Response.Mod.Callouts.Callout callout, string message)
         {
             if (!isCalloutInterfaceAvailable)
