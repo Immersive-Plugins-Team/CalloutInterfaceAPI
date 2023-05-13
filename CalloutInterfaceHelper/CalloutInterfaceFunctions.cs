@@ -2,11 +2,11 @@
 
 namespace CalloutInterfaceHelper
 {
-    public static class Functions
+    public static class CalloutInterfaceFunctions
     {
         public static readonly bool isCalloutInterfaceAvailable;
 
-        static Functions()
+        static CalloutInterfaceFunctions()
         {
             isCalloutInterfaceAvailable = LSPD_First_Response.Mod.API.Functions.GetAllUserPlugins()
                 .Any(x => x.GetName().Name.Equals("CalloutInterface"));

@@ -2,9 +2,9 @@
 
 namespace CalloutInterfaceHelper
 {
-    public class RegisteredCallout : CalloutInfoAttribute
+    public class CalloutInterfaceAttribute : CalloutInfoAttribute
     {
-        public RegisteredCallout(string name, CalloutProbability probability, string description, string priority = "", string agency = "")
+        public CalloutInterfaceAttribute(string name, CalloutProbability probability, string description, string priority = "", string agency = "")
             : base(name, probability)
         {
             this.Agency = agency;

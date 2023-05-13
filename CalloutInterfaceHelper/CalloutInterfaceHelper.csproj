@@ -49,8 +49,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Functions.cs" />
-    <Compile Include="RegisteredCallout.cs" />
+    <Compile Include="CalloutInterfaceFunctions.cs" />
+    <Compile Include="CalloutInterfaceAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
