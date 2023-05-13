@@ -4,8 +4,7 @@ CalloutInterfaceHelper is a library that makes interaction with the CalloutInter
 
 ### Getting Started
 
-Rather than import and reference CalloutInterface.dll directly, the CalloutInterfaceHelper library serves as a safe interface between your callout pack and CalloutInterface.  
-To get started, download the latest release and add CalloutInterfaceHelper.dll as a reference in your project.  Then make sure to bundle the .dll with your project similar to how you would include RageNativeUI.dll.
+Rather than import and reference CalloutInterface.dll directly, the CalloutInterfaceHelper library serves as a safe interface between your callout pack and CalloutInterface.  To get started, download the latest release and add CalloutInterfaceHelper.dll as a reference in your project.  Then make sure to bundle the .dll with your project similar to how you would include RageNativeUI.dll.
 
 ### Decorating your Callouts
 
