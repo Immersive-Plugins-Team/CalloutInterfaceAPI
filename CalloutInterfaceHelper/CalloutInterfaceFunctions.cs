@@ -43,12 +43,23 @@
         [MethodImpl(MethodImplOptions.NoInlining)]
         public static void SendMessage(LSPD_First_Response.Mod.Callouts.Callout callout, string message)
         {
-            if (!IsCalloutInterfaceAvailable)
+            if (IsCalloutInterfaceAvailable)
             {
-                return;
+                CalloutInterface.API.Functions.SendMessage(callout, message);
             }
+        }
 
-            CalloutInterface.API.Functions.SendMessage(callout, message);
+        /// <summary>
+        /// Sends a vehicle for the plate display.
+        /// </summary>
+        /// <param name="vehicle">The targeted vehicle.</param>
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public static void SendVehicle(Rage.Vehicle vehicle)
+        {
+            if (IsCalloutInterfaceAvailable)
+            {
+                CalloutInterface.API.Functions.SendVehicle(vehicle);
+            }
         }
     }
 }
