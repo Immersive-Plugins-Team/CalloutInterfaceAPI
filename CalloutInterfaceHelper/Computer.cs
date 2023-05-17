@@ -1,11 +1,11 @@
-﻿namespace CalloutInterfaceHelper.Computer
+﻿namespace CalloutInterfaceHelper
 {
     using System.Collections.Generic;
 
     /// <summary>
     /// The police computer.
     /// </summary>
-    internal static class Computer
+    public static class Computer
     {
         private static readonly Dictionary<Rage.Vehicle, VehicleRecord> VehicleDatabase = new Dictionary<Rage.Vehicle, VehicleRecord>();
 
@@ -20,6 +20,7 @@
                 return;
             }
 
+            CalloutInterfaceFunctions.SendVehicle(vehicle);
             if (VehicleDatabase.TryGetValue(vehicle, out VehicleRecord vehicleRecord))
             {
                 Events.RaisePlateCheckEvent(vehicleRecord);
@@ -28,7 +29,7 @@
             {
                 var record = new VehicleRecord(vehicle);
                 VehicleDatabase[vehicle] = record;
-                Events.RaisePlateCheckEvent(vehicleRecord);
+                Events.RaisePlateCheckEvent(record);
             }
         }
     }

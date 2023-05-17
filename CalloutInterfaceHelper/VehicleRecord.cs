@@ -1,8 +1,9 @@
-﻿namespace CalloutInterfaceHelper.Computer
+﻿namespace CalloutInterfaceHelper
 {
     using System.Collections.Generic;
     using System.Drawing;
     using LSPD_First_Response.Engine.Scripting.Entities;
+    using Rage;
     using Rage.Native;
 
     /// <summary>
@@ -45,7 +46,7 @@
         /// <summary>
         /// Gets the vehicle insurance status.
         /// </summary>
-        public VehicleDocumentStatus InsuranceStatus { get; }
+        public VehicleDocumentStatus InsuranceStatus { get; } = VehicleDocumentStatus.Unknown;
 
         /// <summary>
         /// Gets the vehicle's license plate.
@@ -80,12 +81,12 @@
         /// <summary>
         /// Gets the vehicle registration status.
         /// </summary>
-        public VehicleDocumentStatus RegistrationStatus { get; }
+        public VehicleDocumentStatus RegistrationStatus { get; } = VehicleDocumentStatus.Unknown;
 
         /// <summary>
         /// Gets the underlying Rage.Vehicle object for the record.
         /// </summary>
-        public Rage.Vehicle Vehicle { get; }
+        public Rage.Vehicle Vehicle { get; } = null;
 
         /// <summary>
         /// Gets a human readable color string from a Color object.
@@ -152,7 +153,7 @@
                 return VehicleDocumentStatus.Unknown;
             }
 
-            var status = External.StopThePedFunctions.GetVehicleDocumentStatus(vehicle, document);
+            var status = StopThePedFunctions.GetVehicleDocumentStatus(vehicle, document);
             if (status != VehicleDocumentStatus.Unknown)
             {
                 return status;
@@ -178,10 +179,16 @@
         /// <returns>A string representing the vehicle's make.</returns>
         internal static string GetVehicleMake(uint hash)
         {
-            var make = Rage.Game.GetLocalizedString(NativeFunction.Natives.GET_MAKE_FROM_VEHICLE_MODEL<string>(hash));
-            if (!string.IsNullOrEmpty(make))
+            try
             {
-                return make;
+                var make = Rage.Game.GetLocalizedString(NativeFunction.Natives.GET_MAKE_NAME_FROM_VEHICLE_MODEL<string>(hash));
+                if (!string.IsNullOrEmpty(make))
+                {
+                    return make;
+                }
+            }
+            catch
+            {
             }
 
             return "unknown";
@@ -194,10 +201,16 @@
         /// <returns>A string representing the vehicle's model.</returns>
         internal static string GetVehicleModel(uint hash)
         {
-            var model = Rage.Game.GetLocalizedString(NativeFunction.Natives.GET_DISPLAY_NAME_FROM_VEHICLE_MODEL<string>(hash));
-            if (!string.IsNullOrEmpty(model))
+            try
             {
-                return model;
+                var model = Rage.Game.GetLocalizedString(NativeFunction.Natives.GET_DISPLAY_NAME_FROM_VEHICLE_MODEL<string>(hash));
+                if (!string.IsNullOrEmpty(model))
+                {
+                    return model;
+                }
+            }
+            catch
+            {
             }
 
             return "unknown";

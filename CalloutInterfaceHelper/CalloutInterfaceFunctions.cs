@@ -31,7 +31,7 @@
         {
             if (IsCalloutInterfaceAvailable)
             {
-                CalloutInterface.API.Functions.SendCalloutDetails(callout, priority, agency);
+                External.CalloutInterfaceInvoker.SendCalloutDetails(callout, priority, agency);
             }
         }
 
@@ -45,7 +45,7 @@
         {
             if (IsCalloutInterfaceAvailable)
             {
-                CalloutInterface.API.Functions.SendMessage(callout, message);
+                External.CalloutInterfaceInvoker.SendMessage(callout, message);
             }
         }
 
@@ -58,7 +58,7 @@
         {
             if (IsCalloutInterfaceAvailable)
             {
-                CalloutInterface.API.Functions.SendVehicle(vehicle);
+                External.CalloutInterfaceInvoker.SendVehicle(vehicle);
             }
         }
     }
