@@ -13,7 +13,8 @@
         /// Runs a plate check.
         /// </summary>
         /// <param name="vehicle">The vehicle to run the plate check against.</param>
-        public static void PlateCheck(Rage.Vehicle vehicle)
+        /// <param name="source">Some identifier to include so we know where the plate check request came from.</param>
+        public static void PlateCheck(Rage.Vehicle vehicle, string source)
         {
             if (!vehicle)
             {
@@ -23,13 +24,13 @@
             CalloutInterfaceFunctions.SendVehicle(vehicle);
             if (VehicleDatabase.TryGetValue(vehicle, out VehicleRecord vehicleRecord))
             {
-                Events.RaisePlateCheckEvent(vehicleRecord);
+                Events.RaisePlateCheckEvent(vehicleRecord, source);
             }
             else
             {
                 var record = new VehicleRecord(vehicle);
                 VehicleDatabase[vehicle] = record;
-                Events.RaisePlateCheckEvent(record);
+                Events.RaisePlateCheckEvent(record, source);
             }
         }
     }
