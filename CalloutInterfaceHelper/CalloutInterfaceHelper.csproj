@@ -76,6 +76,7 @@
     <Compile Include="CalloutInterfaceAttribute.cs" />
     <Compile Include="Computer.cs" />
     <Compile Include="External\CalloutInterfaceInvoker.cs" />
+    <Compile Include="PedRecord.cs" />
     <Compile Include="StopThePedFunctions.cs" />
     <Compile Include="VehicleRecord.cs" />
     <Compile Include="Enums.cs" />
