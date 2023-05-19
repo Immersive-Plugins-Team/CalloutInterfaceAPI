@@ -2,7 +2,6 @@
 {
     using System;
     using LSPD_First_Response.Engine.Scripting.Entities;
-    using Rage;
 
     /// <summary>
     /// Represents a ped record.
@@ -29,29 +28,6 @@
                     this.IsWanted = persona.Wanted;
                     this.Last = persona.Surname;
                     this.LicenseState = persona.ELicenseState;
-
-                    try
-                    {
-                        this.Age = World.DateTime.Year - this.Birthday.Year;
-                    }
-                    catch
-                    {
-                        switch (persona.ModelAge)
-                        {
-                            case PedModelAge.Old:
-                                this.Age = RandomNumberGenerator.Next(55, 75);
-                                break;
-                            case PedModelAge.Middle:
-                                this.Age = RandomNumberGenerator.Next(35, 55);
-                                break;
-                            case PedModelAge.Young:
-                                this.Age = RandomNumberGenerator.Next(16, 35);
-                                break;
-                            default:
-                                this.Age = 30;
-                                break;
-                        }
-                    }
                 }
             }
         }
@@ -60,11 +36,6 @@
         /// Gets the advisory text.
         /// </summary>
         public string Advisory { get; } = string.Empty;
-
-        /// <summary>
-        /// Gets the ped's age.
-        /// </summary>
-        public int Age { get; } = 0;
 
         /// <summary>
         /// Gets the ped's birthday.

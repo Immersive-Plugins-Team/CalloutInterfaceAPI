@@ -1,5 +1,6 @@
 ﻿namespace CalloutInterfaceHelper
 {
+    using System;
     using System.Collections.Generic;
 
     /// <summary>
@@ -9,6 +10,24 @@
     {
         private static readonly Dictionary<Rage.Ped, PedRecord> PedDatabase = new Dictionary<Rage.Ped, PedRecord>();
         private static readonly Dictionary<Rage.Vehicle, VehicleRecord> VehicleDatabase = new Dictionary<Rage.Vehicle, VehicleRecord>();
+        private static DateTime lastDateTime = DateTime.Today + Rage.World.TimeOfDay;
+        private static DateTime nextDateTime = lastDateTime;
+
+        /// <summary>
+        /// Gets a consistent date time.
+        /// </summary>
+        /// <returns>A DateTime object that syncs with the in-game time of day and the current date.</returns>
+        public static DateTime GetDateTime()
+        {
+            nextDateTime = lastDateTime.Date + Rage.World.TimeOfDay;
+            if (nextDateTime < lastDateTime)
+            {
+                nextDateTime += TimeSpan.FromDays(1.0);
+            }
+
+            lastDateTime = nextDateTime;
+            return nextDateTime;
+        }
 
         /// <summary>
         /// Runs a ped check.
