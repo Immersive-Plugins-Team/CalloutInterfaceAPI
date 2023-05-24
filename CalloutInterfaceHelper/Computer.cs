@@ -30,6 +30,34 @@
         }
 
         /// <summary>
+        /// Checks to see if a vehicle has any insurance or registration flags.
+        /// </summary>
+        /// <param name="vehicle">Rage.Vehicle vehicle.</param>
+        /// <returns>True if there are any flags on the vehicle, false otherwise.</returns>
+        public static bool IsVehicleFlagged(Rage.Vehicle vehicle)
+        {
+            if (!vehicle)
+            {
+                return false;
+            }
+
+            VehicleRecord record = null;
+            if (VehicleDatabase.ContainsKey(vehicle))
+            {
+                record = VehicleDatabase[vehicle];
+            }
+            else
+            {
+                record = new VehicleRecord(vehicle);
+                VehicleDatabase[vehicle] = record;
+            }
+
+            return record.InsuranceStatus == VehicleDocumentStatus.Expired || record.InsuranceStatus == VehicleDocumentStatus.None ||
+                record.RegistrationStatus == VehicleDocumentStatus.Expired || record.RegistrationStatus == VehicleDocumentStatus.None ||
+                vehicle.IsStolen;
+        }
+
+        /// <summary>
         /// Runs a ped check.
         /// </summary>
         /// <param name="ped">The ped to run a ped check against.</param>
