@@ -30,31 +30,27 @@
         }
 
         /// <summary>
-        /// Checks to see if a vehicle has any insurance or registration flags.
+        /// Retrieves a vehicle record without doing an official plate check.
         /// </summary>
         /// <param name="vehicle">Rage.Vehicle vehicle.</param>
-        /// <returns>True if there are any flags on the vehicle, false otherwise.</returns>
-        public static bool IsVehicleFlagged(Rage.Vehicle vehicle)
+        /// <returns>The vehicle record.</returns>
+        public static VehicleRecord GetVehicleRecord(Rage.Vehicle vehicle)
         {
-            if (!vehicle)
-            {
-                return false;
-            }
-
             VehicleRecord record = null;
-            if (VehicleDatabase.ContainsKey(vehicle))
+            if (vehicle)
             {
-                record = VehicleDatabase[vehicle];
-            }
-            else
-            {
-                record = new VehicleRecord(vehicle);
-                VehicleDatabase[vehicle] = record;
+                if (VehicleDatabase.ContainsKey(vehicle))
+                {
+                    record = VehicleDatabase[vehicle];
+                }
+                else
+                {
+                    record = new VehicleRecord(vehicle);
+                    VehicleDatabase[vehicle] = record;
+                }
             }
 
-            return record.InsuranceStatus == VehicleDocumentStatus.Expired || record.InsuranceStatus == VehicleDocumentStatus.None ||
-                record.RegistrationStatus == VehicleDocumentStatus.Expired || record.RegistrationStatus == VehicleDocumentStatus.None ||
-                vehicle.IsStolen;
+            return record;
         }
 
         /// <summary>
