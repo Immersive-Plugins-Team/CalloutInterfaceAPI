@@ -25,7 +25,7 @@
             if (vehicle)
             {
                 this.Class = vehicle.Class.ToString();
-                this.Color = GetColorName(vehicle.PrimaryColor);
+                this.Color = Functions.GetColorName(vehicle.PrimaryColor);
                 this.InsuranceStatus = GetDocumentStatus(vehicle, VehicleDocument.Insurance);
                 this.LicensePlate = vehicle.LicensePlate;
                 this.LicensePlateStyle = vehicle.LicensePlateStyle;
@@ -103,86 +103,6 @@
         /// Gets the underlying Rage.Vehicle object for the record.
         /// </summary>
         public Rage.Vehicle Vehicle { get; } = null;
-
-        /// <summary>
-        /// Fuck this shit.
-        /// </summary>
-        public static string GetColorName(Color color)
-        {
-            float hue = color.GetHue();
-            float saturation = color.GetSaturation();
-            float brightness = color.GetBrightness();
-            string name;
-
-            if (brightness < 0.1)
-            {
-                name = "Black";
-            }
-            else if (saturation < 0.1 && brightness > 0.9)
-            {
-                name = "White";
-            }
-            else if (saturation < 0.1)
-            {
-                name = "Gray";
-            }
-            else if (hue < 30 || hue >= 330)
-            {
-                if (saturation > 0.5 && saturation < 0.9 && brightness > 0.5 && brightness < 0.9)
-                {
-                    name = "Pink";
-                }
-                else
-                {
-                    name = "Red";
-                }
-            }
-            else if (hue < 90)
-            {
-                if (saturation > 0.6 && brightness < 0.2)
-                {
-                    name = "Brown";
-                }
-                else if (saturation < 0.4 && brightness > 0.5 && brightness < 0.8)
-                {
-                    name = "Orange";
-                }
-                else if (saturation < 0.4 && brightness > 0.8)
-                {
-                    name = "Tan";
-                }
-                else
-                {
-                    name = "Yellow";
-                }
-            }
-            else if (hue < 150)
-            {
-                if (brightness < 0.5 && saturation < 0.6)
-                {
-                    name = "Olive";
-                }
-                else
-                {
-                    name = "Green";
-                }
-            }
-            else if (hue < 210)
-            {
-                name = "Cyan";
-            }
-            else if (hue < 270)
-            {
-                name = "Blue";
-            }
-            else
-            {
-                name = "Purple";
-            }
-
-            Game.LogTrivial($"Color Lookup  Name: {name}  RGB: {color.R},{color.G},{color.B}  HSB: {hue},{saturation},{brightness}");
-            return name;
-        }
 
         /// <summary>
         /// Gets a vehicle registration status.
