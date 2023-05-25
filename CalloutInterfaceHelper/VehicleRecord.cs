@@ -1,7 +1,10 @@
 ﻿namespace CalloutInterfaceHelper
 {
+    using System;
     using System.Collections.Generic;
+    using System.Diagnostics.Eventing.Reader;
     using System.Drawing;
+    using System.Xml.Schema;
     using LSPD_First_Response.Engine.Scripting.Entities;
     using Rage;
     using Rage.Native;
@@ -11,6 +14,8 @@
     /// </summary>
     public class VehicleRecord
     {
+        private Persona ownerPersona = null;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="VehicleRecord"/> class.
         /// </summary>
@@ -27,7 +32,6 @@
                 this.Make = GetVehicleMake(vehicle.Model.Hash);
                 this.Model = GetVehicleModel(vehicle.Model.Hash);
                 this.OwnerName = LSPD_First_Response.Mod.API.Functions.GetVehicleOwnerName(vehicle);
-                this.OwnerPersona = GetOwnerPersona(vehicle);
                 this.RegistrationStatus = GetDocumentStatus(vehicle, VehicleDocument.Registration);
                 this.Vehicle = vehicle;
             }
@@ -76,7 +80,19 @@
         /// <summary>
         /// Gets the vehicle owner's persona.
         /// </summary>
-        public Persona OwnerPersona { get; } = null;
+        public Persona OwnerPersona
+        {
+            get
+            {
+                // since getting the owner persona requires enumeration of all world peds, use lazy lookup
+                if (this.ownerPersona == null && this.Vehicle)
+                {
+                    this.ownerPersona = GetOwnerPersona(this.Vehicle);
+                }
+
+                return this.ownerPersona;
+            }
+        }
 
         /// <summary>
         /// Gets the vehicle registration status.
@@ -89,55 +105,83 @@
         public Rage.Vehicle Vehicle { get; } = null;
 
         /// <summary>
-        /// Gets a human readable color string from a Color object.
+        /// Fuck this shit.
         /// </summary>
-        /// <param name="color">The Color object.</param>
-        /// <returns>The name of the color.</returns>
-        internal static string GetColorName(Color color)
+        public static string GetColorName(Color color)
         {
-            // Define some colors and their RGB values
-            Dictionary<string, int[]> colors = new Dictionary<string, int[]>
-            {
-                { "Black", new int[] { 0, 0, 0 } },
-                { "White", new int[] { 255, 255, 255 } },
-                { "Silver", new int[] { 192, 192, 192 } },
-                { "Gray", new int[] { 128, 128, 128 } },
-                { "Dark Gray", new int[] { 64, 64, 64 } },
-                { "Light Gray", new int[] { 192, 192, 192 } },
-                { "Red", new int[] { 255, 0, 0 } },
-                { "Dark Red", new int[] { 139, 0, 0 } },
-                { "Pink", new int[] { 255, 192, 203 } },
-                { "Maroon", new int[] { 128, 0, 0 } },
-                { "Brown", new int[] { 165, 42, 42 } },
-                { "Light Brown", new int[] { 205, 133, 63 } },
-                { "Dark Brown", new int[] { 101, 67, 33 } },
-                { "Orange", new int[] { 255, 165, 0 } },
-                { "Yellow", new int[] { 255, 255, 0 } },
-                { "Green", new int[] { 0, 128, 0 } },
-                { "Light Green", new int[] { 144, 238, 144 } },
-                { "Dark Green", new int[] { 0, 100, 0 } },
-                { "Blue", new int[] { 0, 0, 255 } },
-                { "Light Blue", new int[] { 173, 216, 230 } },
-                { "Dark Blue", new int[] { 0, 0, 139 } },
-                { "Navy Blue", new int[] { 0, 0, 128 } },
-                { "Purple", new int[] { 128, 0, 128 } },
-            };
+            float hue = color.GetHue();
+            float saturation = color.GetSaturation();
+            float brightness = color.GetBrightness();
+            string name;
 
-            // Find the color with the closest RGB values
-            int minDistance = int.MaxValue;
-            string closestColor = "unk";
-            foreach (var kvp in colors)
+            if (brightness < 0.1)
             {
-                int[] rgb = kvp.Value;
-                int distance = ((color.R - rgb[0]) * (color.R - rgb[0])) + ((color.G - rgb[1]) * (color.G - rgb[1])) + ((color.B - rgb[2]) * (color.B - rgb[2]));
-                if (distance < minDistance)
+                name = "Black";
+            }
+            else if (saturation < 0.1 && brightness > 0.9)
+            {
+                name = "White";
+            }
+            else if (saturation < 0.1)
+            {
+                name = "Gray";
+            }
+            else if (hue < 30 || hue >= 330)
+            {
+                if (saturation > 0.5 && saturation < 0.9 && brightness > 0.5 && brightness < 0.9)
                 {
-                    minDistance = distance;
-                    closestColor = kvp.Key;
+                    name = "Pink";
+                }
+                else
+                {
+                    name = "Red";
                 }
             }
+            else if (hue < 90)
+            {
+                if (saturation > 0.6 && brightness < 0.2)
+                {
+                    name = "Brown";
+                }
+                else if (saturation < 0.4 && brightness > 0.5 && brightness < 0.8)
+                {
+                    name = "Orange";
+                }
+                else if (saturation < 0.4 && brightness > 0.8)
+                {
+                    name = "Tan";
+                }
+                else
+                {
+                    name = "Yellow";
+                }
+            }
+            else if (hue < 150)
+            {
+                if (brightness < 0.5 && saturation < 0.6)
+                {
+                    name = "Olive";
+                }
+                else
+                {
+                    name = "Green";
+                }
+            }
+            else if (hue < 210)
+            {
+                name = "Cyan";
+            }
+            else if (hue < 270)
+            {
+                name = "Blue";
+            }
+            else
+            {
+                name = "Purple";
+            }
 
-            return closestColor;
+            Game.LogTrivial($"Color Lookup  Name: {name}  RGB: {color.R},{color.G},{color.B}  HSB: {hue},{saturation},{brightness}");
+            return name;
         }
 
         /// <summary>
