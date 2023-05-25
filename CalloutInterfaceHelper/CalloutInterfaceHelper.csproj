@@ -72,16 +72,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CalloutInterfaceFunctions.cs" />
+    <Compile Include="External\CalloutInterfaceFunctions.cs" />
     <Compile Include="CalloutInterfaceAttribute.cs" />
     <Compile Include="Computer.cs" />
     <Compile Include="External\CalloutInterfaceInvoker.cs" />
-    <Compile Include="Functions.cs" />
-    <Compile Include="PedRecord.cs" />
-    <Compile Include="StopThePedFunctions.cs" />
-    <Compile Include="VehicleRecord.cs" />
+    <Compile Include="API\Functions.cs" />
+    <Compile Include="Records\PedRecord.cs" />
+    <Compile Include="External\StopThePedFunctions.cs" />
+    <Compile Include="Records\VehicleRecord.cs" />
     <Compile Include="Enums.cs" />
-    <Compile Include="Events.cs" />
+    <Compile Include="API\Events.cs" />
     <Compile Include="External\StopThePedInvoker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RandomNumberGenerator.cs" />

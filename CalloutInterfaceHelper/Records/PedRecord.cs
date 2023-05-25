@@ -1,4 +1,4 @@
-﻿namespace CalloutInterfaceHelper
+﻿namespace CalloutInterfaceHelper.Records
 {
     using System;
     using LSPD_First_Response.Engine.Scripting.Entities;

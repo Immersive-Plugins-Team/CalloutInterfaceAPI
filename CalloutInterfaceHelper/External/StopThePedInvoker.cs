@@ -29,5 +29,27 @@
 
             return VehicleDocumentStatus.Unknown;
         }
+
+        /// <summary>
+        /// Sets the vehicle's document status in StopThePed.
+        /// </summary>
+        /// <param name="vehicle">The vehicle.</param>
+        /// <param name="document">The type of document.</param>
+        /// <param name="status">The document status.</param>
+        public static void SetVehicleDocumentStatus(Rage.Vehicle vehicle, VehicleDocument document, VehicleDocumentStatus status)
+        {
+            if (vehicle)
+            {
+                var stpStatus = status == VehicleDocumentStatus.Expired ? StopThePed.API.STPVehicleStatus.Expired : (status == VehicleDocumentStatus.None ? StopThePed.API.STPVehicleStatus.None : StopThePed.API.STPVehicleStatus.Valid);
+                if (document == VehicleDocument.Insurance)
+                {
+                    StopThePed.API.Functions.setVehicleInsuranceStatus(vehicle, stpStatus);
+                }
+                else if (document == VehicleDocument.Registration)
+                {
+                    StopThePed.API.Functions.setVehicleRegistrationStatus(vehicle, stpStatus);
+                }
+            }
+        }
     }
 }

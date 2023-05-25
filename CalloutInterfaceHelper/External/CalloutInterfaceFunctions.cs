@@ -1,4 +1,4 @@
-﻿namespace CalloutInterfaceHelper
+﻿namespace CalloutInterfaceHelper.External
 {
     using System.Linq;
     using System.Runtime.CompilerServices;

@@ -1,4 +1,4 @@
-﻿namespace CalloutInterfaceHelper
+﻿namespace CalloutInterfaceHelper.API
 {
     using System;
     using System.Collections.Generic;

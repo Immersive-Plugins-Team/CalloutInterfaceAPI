@@ -1,12 +1,9 @@
-﻿namespace CalloutInterfaceHelper
+﻿namespace CalloutInterfaceHelper.Records
 {
     using System;
-    using System.Collections.Generic;
-    using System.Diagnostics.Eventing.Reader;
-    using System.Drawing;
-    using System.Xml.Schema;
+    using CalloutInterfaceHelper.API;
+    using CalloutInterfaceHelper.External;
     using LSPD_First_Response.Engine.Scripting.Entities;
-    using Rage;
     using Rage.Native;
 
     /// <summary>
@@ -22,6 +19,7 @@
         /// <param name="vehicle">The Rage.Vehicle to base the record on.</param>
         public VehicleRecord(Rage.Vehicle vehicle)
         {
+            this.RecordCreated = DateTime.Now;
             if (vehicle)
             {
                 this.Class = vehicle.Class.ToString();
@@ -95,6 +93,11 @@
         }
 
         /// <summary>
+        /// Gets the real world DateTime for when the record was created.
+        /// </summary>
+        public DateTime RecordCreated { get; }
+
+        /// <summary>
         /// Gets the vehicle registration status.
         /// </summary>
         public VehicleDocumentStatus RegistrationStatus { get; } = VehicleDocumentStatus.Unknown;
@@ -120,17 +123,26 @@
             var status = StopThePedFunctions.GetVehicleDocumentStatus(vehicle, document);
             if (status != VehicleDocumentStatus.Unknown)
             {
+                if (status != VehicleDocumentStatus.Valid && Computer.IsInvalidVehicleDocumentRateExceeded())
+                {
+                    status = VehicleDocumentStatus.Valid;
+                    StopThePedFunctions.SetVehicleDocumentStatus(vehicle, document, status);
+                }
+
                 return status;
             }
 
-            int random = RandomNumberGenerator.Next(0, 20);
-            if (random == 7 || random == 12)
+            if (!Computer.IsInvalidVehicleDocumentRateExceeded())
             {
-                return VehicleDocumentStatus.Expired;
-            }
-            else if (random == 10)
-            {
-                return VehicleDocumentStatus.None;
+                int random = RandomNumberGenerator.Next(0, 30);
+                if (random == 7 || random == 12)
+                {
+                    return VehicleDocumentStatus.Expired;
+                }
+                else if (random == 10)
+                {
+                    return VehicleDocumentStatus.None;
+                }
             }
 
             return VehicleDocumentStatus.Valid;
@@ -193,13 +205,10 @@
             }
 
             var name = LSPD_First_Response.Mod.API.Functions.GetVehicleOwnerName(vehicle);
-            if (vehicle.Driver)
+            var driver = Computer.GetDriverPersona(vehicle);
+            if (driver != null && string.Compare(driver.FullName, name, true) == 0)
             {
-                var driver = LSPD_First_Response.Mod.API.Functions.GetPersonaForPed(vehicle.Driver);
-                if (string.Compare(driver.FullName, name, true) == 0)
-                {
-                    return driver;
-                }
+                return driver;
             }
 
             foreach (var ped in Rage.World.EnumeratePeds())

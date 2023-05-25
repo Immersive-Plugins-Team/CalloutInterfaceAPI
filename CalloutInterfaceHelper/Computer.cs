@@ -2,6 +2,10 @@
 {
     using System;
     using System.Collections.Generic;
+    using CalloutInterfaceHelper.API;
+    using CalloutInterfaceHelper.External;
+    using CalloutInterfaceHelper.Records;
+    using LSPD_First_Response.Engine.Scripting.Entities;
 
     /// <summary>
     /// The police computer.
@@ -12,6 +16,8 @@
         private static readonly Dictionary<Rage.Vehicle, VehicleRecord> VehicleDatabase = new Dictionary<Rage.Vehicle, VehicleRecord>();
         private static DateTime lastDateTime = DateTime.Today + Rage.World.TimeOfDay;
         private static DateTime nextDateTime = lastDateTime;
+        private static float invalidVehicleDocumentRate = 0.05f;
+        private static int invalidVehicleDocumentCount = 0;
 
         /// <summary>
         /// Gets a consistent date time.
@@ -27,6 +33,21 @@
 
             lastDateTime = nextDateTime;
             return nextDateTime;
+        }
+
+        /// <summary>
+        /// Gets the persona for the driver of a vehicle if available.
+        /// </summary>
+        /// <param name="vehicle">The vehicle.</param>
+        /// <returns>The persona, or null.</returns>
+        public static Persona GetDriverPersona(Rage.Vehicle vehicle)
+        {
+            if (vehicle && vehicle.HasDriver && vehicle.Driver)
+            {
+                return LSPD_First_Response.Mod.API.Functions.GetPersonaForPed(vehicle.Driver);
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -99,7 +120,34 @@
                 record = new VehicleRecord(vehicle);
                 VehicleDatabase[vehicle] = record;
                 Events.RaisePlateCheckEvent(record, source);
+                if (record.InsuranceStatus != VehicleDocumentStatus.Valid || record.RegistrationStatus != VehicleDocumentStatus.Valid)
+                {
+                    invalidVehicleDocumentCount++;
+                }
             }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether or not the invalid document rate is currently exceeded.
+        /// </summary>
+        /// <returns>True if there are too many invalid document results in the vehicle database.</returns>
+        internal static bool IsInvalidVehicleDocumentRateExceeded()
+        {
+            if (VehicleDatabase.Count > 0)
+            {
+                return ((float)invalidVehicleDocumentCount / VehicleDatabase.Count) > invalidVehicleDocumentRate;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Sets the rate at which documents should return as invalid.
+        /// </summary>
+        /// <param name="rate">The rate as a value from 0-1f.</param>
+        internal static void SetInvalidVehicleDocumentRate(float rate)
+        {
+            invalidVehicleDocumentRate = rate;
         }
     }
 }
