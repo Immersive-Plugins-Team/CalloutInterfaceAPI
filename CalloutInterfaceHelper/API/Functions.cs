@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Drawing;
+    using Rage.Native;
 
     /// <summary>
     /// Miscellanous helper functions.
@@ -10,6 +11,8 @@
     public static class Functions
     {
         private static readonly List<ColorCondition> ColorTable;
+        private static DateTime lastDateTime = DateTime.Today + Rage.World.TimeOfDay;
+        private static DateTime nextDateTime = lastDateTime;
 
         static Functions()
         {
@@ -51,6 +54,66 @@
             }
 
             return "Unknown";
+        }
+
+        /// <summary>
+        /// Gets a consistent date time.
+        /// </summary>
+        /// <returns>A DateTime object that syncs with the in-game time of day and the current date.</returns>
+        public static DateTime GetDateTime()
+        {
+            nextDateTime = lastDateTime.Date + Rage.World.TimeOfDay;
+            if (nextDateTime < lastDateTime)
+            {
+                nextDateTime += TimeSpan.FromDays(1.0);
+            }
+
+            lastDateTime = nextDateTime;
+            return nextDateTime;
+        }
+
+        /// <summary>
+        /// Retrieves the make of a vehicle.
+        /// </summary>
+        /// <param name="hash">The vehicle's model hash.</param>
+        /// <returns>A string representing the vehicle's make.</returns>
+        internal static string GetVehicleMake(uint hash)
+        {
+            try
+            {
+                var make = Rage.Game.GetLocalizedString(NativeFunction.Natives.GET_MAKE_NAME_FROM_VEHICLE_MODEL<string>(hash));
+                if (!string.IsNullOrEmpty(make))
+                {
+                    return make;
+                }
+            }
+            catch
+            {
+            }
+
+            return "unknown";
+        }
+
+        /// <summary>
+        /// Retrieves the model of a vehicle.
+        /// </summary>
+        /// <param name="hash">The vehicle's model hash.</param>
+        /// <returns>A string representing the vehicle's model.</returns>
+        internal static string GetVehicleModel(uint hash)
+        {
+            try
+            {
+                var model = Rage.Game.GetLocalizedString(NativeFunction.Natives.GET_DISPLAY_NAME_FROM_VEHICLE_MODEL<string>(hash));
+                if (!string.IsNullOrEmpty(model))
+                {
+                    return model;
+                }
+            }
+            catch
+            {
+            }
+
+            return "unknown";
         }
 
         /// <summary>

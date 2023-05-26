@@ -1,7 +1,5 @@
 ﻿namespace CalloutInterfaceHelper
 {
-    using System;
-    using System.Collections.Generic;
     using CalloutInterfaceHelper.API;
     using CalloutInterfaceHelper.External;
     using CalloutInterfaceHelper.Records;
@@ -12,42 +10,17 @@
     /// </summary>
     public static class Computer
     {
-        private static readonly Dictionary<Rage.Ped, PedRecord> PedDatabase = new Dictionary<Rage.Ped, PedRecord>();
-        private static readonly Dictionary<Rage.Vehicle, VehicleRecord> VehicleDatabase = new Dictionary<Rage.Vehicle, VehicleRecord>();
-        private static DateTime lastDateTime = DateTime.Today + Rage.World.TimeOfDay;
-        private static DateTime nextDateTime = lastDateTime;
-        private static float invalidVehicleDocumentRate = 0.05f;
-        private static int invalidVehicleDocumentCount = 0;
+        private static readonly PedDatabase PedDatabase = new PedDatabase();
+        private static readonly VehicleDatabase VehicleDatabase = new VehicleDatabase();
 
         /// <summary>
-        /// Gets a consistent date time.
+        /// Retrieves a ped record without doing an official ped check.
         /// </summary>
-        /// <returns>A DateTime object that syncs with the in-game time of day and the current date.</returns>
-        public static DateTime GetDateTime()
+        /// <param name="ped">Rage.Ped ped.</param>
+        /// <returns>The ped record.</returns>
+        public static PedRecord GetPedRecord(Rage.Ped ped)
         {
-            nextDateTime = lastDateTime.Date + Rage.World.TimeOfDay;
-            if (nextDateTime < lastDateTime)
-            {
-                nextDateTime += TimeSpan.FromDays(1.0);
-            }
-
-            lastDateTime = nextDateTime;
-            return nextDateTime;
-        }
-
-        /// <summary>
-        /// Gets the persona for the driver of a vehicle if available.
-        /// </summary>
-        /// <param name="vehicle">The vehicle.</param>
-        /// <returns>The persona, or null.</returns>
-        public static Persona GetDriverPersona(Rage.Vehicle vehicle)
-        {
-            if (vehicle && vehicle.HasDriver && vehicle.Driver)
-            {
-                return LSPD_First_Response.Mod.API.Functions.GetPersonaForPed(vehicle.Driver);
-            }
-
-            return null;
+            return PedDatabase.GetRecord(ped);
         }
 
         /// <summary>
@@ -57,21 +30,7 @@
         /// <returns>The vehicle record.</returns>
         public static VehicleRecord GetVehicleRecord(Rage.Vehicle vehicle)
         {
-            VehicleRecord record = null;
-            if (vehicle)
-            {
-                if (VehicleDatabase.ContainsKey(vehicle))
-                {
-                    record = VehicleDatabase[vehicle];
-                }
-                else
-                {
-                    record = new VehicleRecord(vehicle);
-                    VehicleDatabase[vehicle] = record;
-                }
-            }
-
-            return record;
+            return VehicleDatabase.GetRecord(vehicle);
         }
 
         /// <summary>
@@ -81,19 +40,9 @@
         /// <param name="source">Some identifier to include so we know where the ped check request came from.</param>
         public static void PedCheck(Rage.Ped ped, string source)
         {
-            if (!ped)
+            if (ped)
             {
-                return;
-            }
-
-            if (PedDatabase.TryGetValue(ped, out PedRecord record))
-            {
-                Events.RaisePedCheckEvent(record, source);
-            }
-            else
-            {
-                record = new PedRecord(ped);
-                PedDatabase[ped] = record;
+                var record = PedDatabase.GetRecord(ped);
                 Events.RaisePedCheckEvent(record, source);
             }
         }
@@ -105,49 +54,94 @@
         /// <param name="source">Some identifier to include so we know where the plate check request came from.</param>
         public static void PlateCheck(Rage.Vehicle vehicle, string source)
         {
-            if (!vehicle)
+            if (vehicle)
             {
-                return;
-            }
-
-            CalloutInterfaceFunctions.SendVehicle(vehicle);
-            if (VehicleDatabase.TryGetValue(vehicle, out VehicleRecord record))
-            {
+                CalloutInterfaceFunctions.SendVehicle(vehicle);
+                var record = VehicleDatabase.GetRecord(vehicle);
                 Events.RaisePlateCheckEvent(record, source);
-            }
-            else
-            {
-                record = new VehicleRecord(vehicle);
-                VehicleDatabase[vehicle] = record;
-                Events.RaisePlateCheckEvent(record, source);
-                if (record.InsuranceStatus != VehicleDocumentStatus.Valid || record.RegistrationStatus != VehicleDocumentStatus.Valid)
-                {
-                    invalidVehicleDocumentCount++;
-                }
             }
         }
 
         /// <summary>
-        /// Gets a value indicating whether or not the invalid document rate is currently exceeded.
+        /// Gets the persona for the driver of a vehicle if available.
         /// </summary>
-        /// <returns>True if there are too many invalid document results in the vehicle database.</returns>
-        internal static bool IsInvalidVehicleDocumentRateExceeded()
+        /// <param name="vehicle">The vehicle.</param>
+        /// <returns>The persona, or null.</returns>
+        internal static Persona GetDriverPersona(Rage.Vehicle vehicle)
         {
-            if (VehicleDatabase.Count > 0)
+            if (vehicle && vehicle.HasDriver && vehicle.Driver)
             {
-                return ((float)invalidVehicleDocumentCount / VehicleDatabase.Count) > invalidVehicleDocumentRate;
+                return PedDatabase.GetRecord(vehicle.Driver).Persona;
             }
 
-            return false;
+            return null;
+        }
+
+        /// <summary>
+        /// Gets the Ped Persona for the owner of the vehicle.
+        /// </summary>
+        /// <param name="vehicle">The vehicle being looked up.</param>
+        /// <returns>The relevant persona.</returns>
+        internal static Persona GetOwnerPersona(Rage.Vehicle vehicle)
+        {
+            if (!vehicle)
+            {
+                return null;
+            }
+
+            var name = LSPD_First_Response.Mod.API.Functions.GetVehicleOwnerName(vehicle);
+            var driver = GetDriverPersona(vehicle);
+            if (driver != null && string.Compare(driver.FullName, name, true) == 0)
+            {
+                return driver;
+            }
+
+            foreach (var ped in Rage.Game.LocalPlayer.Character.GetNearbyPeds(16))
+            {
+                var persona = PedDatabase.GetRecord(ped).Persona;
+                if (persona != null && string.Compare(persona.FullName, name, true) == 0)
+                {
+                    return persona;
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Prunes the databases completely.
+        /// </summary>
+        internal static void PurgeAll()
+        {
+            PedDatabase.Prune(0);
+            VehicleDatabase.Prune(0);
         }
 
         /// <summary>
         /// Sets the rate at which documents should return as invalid.
         /// </summary>
         /// <param name="rate">The rate as a value from 0-1f.</param>
-        internal static void SetInvalidVehicleDocumentRate(float rate)
+        internal static void SetMaxInvalidDocumentRate(float rate)
         {
-            invalidVehicleDocumentRate = rate;
+            VehicleDatabase.MaxInvalidDocumentRate = rate;
+        }
+
+        /// <summary>
+        /// Sets the rate at which licenses should return as invalid.
+        /// </summary>
+        /// <param name="rate">The rate as a value from 0-1f.</param>
+        internal static void SetMaxInvalidLicenseRate(float rate)
+        {
+            PedDatabase.MaxInvalidLicenseRate = rate;
+        }
+
+        /// <summary>
+        /// Sets the rate at which persons should come back wanted.
+        /// </summary>
+        /// <param name="rate">The rate as a value from 0-1f.</param>
+        internal static void SetMaxWantedRate(float rate)
+        {
+            PedDatabase.MaxWantedRate = rate;
         }
     }
 }

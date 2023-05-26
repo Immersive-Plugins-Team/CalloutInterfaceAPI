@@ -77,8 +77,12 @@
     <Compile Include="Computer.cs" />
     <Compile Include="External\CalloutInterfaceInvoker.cs" />
     <Compile Include="API\Functions.cs" />
+    <Compile Include="Records\EntityRecord.cs" />
+    <Compile Include="Records\PedDatabase.cs" />
     <Compile Include="Records\PedRecord.cs" />
     <Compile Include="External\StopThePedFunctions.cs" />
+    <Compile Include="Records\RecordDatabase.cs" />
+    <Compile Include="Records\VehicleDatabase.cs" />
     <Compile Include="Records\VehicleRecord.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="API\Events.cs" />
