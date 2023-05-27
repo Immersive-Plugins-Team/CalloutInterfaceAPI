@@ -1,4 +1,4 @@
-﻿namespace CalloutInterfaceHelper
+﻿namespace CalloutInterfaceAPI
 {
     /// <summary>
     /// A helper class for generating random numbers.

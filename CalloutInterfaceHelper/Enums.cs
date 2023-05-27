@@ -1,4 +1,4 @@
-﻿namespace CalloutInterfaceHelper
+﻿namespace CalloutInterfaceAPI
 {
     /// <summary>
     /// The type of vehicle document a policeman might be interested in.

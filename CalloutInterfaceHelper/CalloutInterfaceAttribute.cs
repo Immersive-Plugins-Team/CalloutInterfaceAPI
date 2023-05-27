@@ -1,4 +1,4 @@
-﻿namespace CalloutInterfaceHelper
+﻿namespace CalloutInterfaceAPI
 {
     using LSPD_First_Response.Mod.Callouts;
 

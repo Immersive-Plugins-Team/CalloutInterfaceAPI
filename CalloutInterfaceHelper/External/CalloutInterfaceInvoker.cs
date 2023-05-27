@@ -1,7 +1,7 @@
-﻿namespace CalloutInterfaceHelper.External
+﻿namespace CalloutInterfaceAPI.External
 {
     /// <summary>
-    /// The actual CalloutInterface calls.  Do not call these directly.
+    /// Functions for interacting with CalloutInterface.  Calling these when CalloutInteface is unavailable will cause a crash.
     /// </summary>
     internal static class CalloutInterfaceInvoker
     {
