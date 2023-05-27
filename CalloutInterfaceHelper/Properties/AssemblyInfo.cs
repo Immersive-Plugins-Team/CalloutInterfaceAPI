@@ -4,11 +4,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("CalloutInterfaceHelper")]
+[assembly: AssemblyTitle("CalloutInterfaceAPI")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("CalloutInterfaceHelper")]
+[assembly: AssemblyProduct("CalloutInterfaceAPI")]
 [assembly: AssemblyCopyright("Copyright ©  2023 Immersive Plugins Team")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

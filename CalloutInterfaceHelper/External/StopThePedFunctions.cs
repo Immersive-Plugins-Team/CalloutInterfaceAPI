@@ -1,4 +1,4 @@
-﻿namespace CalloutInterfaceHelper.External
+﻿namespace CalloutInterfaceAPI.External
 {
     using System.Linq;
     using System.Runtime.CompilerServices;
@@ -6,7 +6,7 @@
     /// <summary>
     /// Safe interface to StopThePed functions.
     /// </summary>
-    public static class StopThePedFunctions
+    internal static class StopThePedFunctions
     {
         /// <summary>
         /// Indicates whether the Callout Interface is available.
@@ -30,7 +30,7 @@
         {
             if (IsStopThePedAvailable)
             {
-                return External.StopThePedInvoker.GetVehicleDocumentStatus(vehicle, document);
+                return StopThePedInvoker.GetVehicleDocumentStatus(vehicle, document);
             }
 
             return VehicleDocumentStatus.Unknown;
@@ -47,7 +47,7 @@
         {
             if (IsStopThePedAvailable)
             {
-                External.StopThePedInvoker.SetVehicleDocumentStatus(vehicle, document, status);
+                StopThePedInvoker.SetVehicleDocumentStatus(vehicle, document, status);
             }
         }
     }

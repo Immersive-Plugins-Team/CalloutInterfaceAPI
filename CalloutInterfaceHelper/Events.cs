@@ -1,6 +1,6 @@
-﻿namespace CalloutInterfaceHelper.API
+﻿namespace CalloutInterfaceAPI
 {
-    using CalloutInterfaceHelper.Records;
+    using CalloutInterfaceAPI.Records;
 
     /// <summary>
     /// Callout Interface Helper events.

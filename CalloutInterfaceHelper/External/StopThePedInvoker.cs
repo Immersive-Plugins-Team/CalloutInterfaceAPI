@@ -1,9 +1,9 @@
-﻿namespace CalloutInterfaceHelper.External
+﻿namespace CalloutInterfaceAPI.External
 {
     /// <summary>
-    /// Functions for interacting with StopThePed.
+    /// Functions for interacting with StopThePed.  Calling this when StopThePed is unavailable will cause a crash.
     /// </summary>
-    public static class StopThePedInvoker
+    internal static class StopThePedInvoker
     {
         /// <summary>
         /// Gets the vehicle's document status from StopThePed.
@@ -11,7 +11,7 @@
         /// <param name="vehicle">The vehicle.</param>
         /// <param name="document">The type of document.</param>
         /// <returns>The relevant status if it's available.</returns>
-        public static VehicleDocumentStatus GetVehicleDocumentStatus(Rage.Vehicle vehicle, VehicleDocument document)
+        internal static VehicleDocumentStatus GetVehicleDocumentStatus(Rage.Vehicle vehicle, VehicleDocument document)
         {
             if (vehicle)
             {
@@ -36,7 +36,7 @@
         /// <param name="vehicle">The vehicle.</param>
         /// <param name="document">The type of document.</param>
         /// <param name="status">The document status.</param>
-        public static void SetVehicleDocumentStatus(Rage.Vehicle vehicle, VehicleDocument document, VehicleDocumentStatus status)
+        internal static void SetVehicleDocumentStatus(Rage.Vehicle vehicle, VehicleDocument document, VehicleDocumentStatus status)
         {
             if (vehicle)
             {

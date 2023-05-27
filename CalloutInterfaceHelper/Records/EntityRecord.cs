@@ -1,4 +1,4 @@
-﻿namespace CalloutInterfaceHelper.Records
+﻿namespace CalloutInterfaceAPI.Records
 {
     using System;
 

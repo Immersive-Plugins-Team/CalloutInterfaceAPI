@@ -1,4 +1,4 @@
-﻿namespace CalloutInterfaceHelper.Records
+﻿namespace CalloutInterfaceAPI.Records
 {
     using System.Collections.Generic;
     using System.Diagnostics;
@@ -23,7 +23,12 @@
         }
 
         /// <summary>
-        /// Gets a dictionary of entity records with the underlying entity as key.
+        /// Gets or sets a value indicating how long (in minutes) we should wait before automatically pruning records.
+        /// </summary>
+        internal int PruneInterval { get; set; } = 15;
+
+        /// <summary>
+        /// Gets a dictionary of entity records with the entity's (hopefully unique) pool handle as key.
         /// </summary>
         protected Dictionary<Rage.PoolHandle, TRecord> Entities { get; } = new Dictionary<Rage.PoolHandle, TRecord>();
 
@@ -34,10 +39,10 @@
         /// <returns>The relevant record.</returns>
         public TRecord GetRecord(TEntity entity)
         {
-            if (this.pruneTimer.Elapsed.TotalMinutes > 10)
+            if (this.pruneTimer.Elapsed.TotalMinutes > this.PruneInterval)
             {
+                this.Prune(this.PruneInterval * 2);
                 this.pruneTimer.Restart();
-                this.Prune(30);
             }
 
             TRecord record = null;

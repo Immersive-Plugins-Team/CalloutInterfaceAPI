@@ -1,9 +1,8 @@
-﻿namespace CalloutInterfaceHelper.Records
+﻿namespace CalloutInterfaceAPI.Records
 {
     using System;
     using System.Collections.Generic;
     using LSPD_First_Response.Engine.Scripting.Entities;
-    using Rage;
 
     /// <summary>
     /// Represents a database of ped records.
@@ -26,10 +25,10 @@
         /// <inheritdoc />
         internal override void Prune(int minutes)
         {
-            Game.LogTrivial($"CalloutInterfaceHelper pruning ped data older than {minutes} minute(s)");
-            Game.LogTrivial($"  {this.Entities.Count} peds");
-            Game.LogTrivial($"  {this.invalidLicenseCount} invalid licenses");
-            Game.LogTrivial($"  {this.wantedCount} wanted");
+            Rage.Game.LogTrivial($"CalloutInterfaceAPI pruning ped data older than {minutes} minute(s)");
+            Rage.Game.LogTrivial($"  total entries: {this.Entities.Count}");
+            Rage.Game.LogTrivial($"  invalid licenses: {this.invalidLicenseCount}");
+            Rage.Game.LogTrivial($"  wanted count    : {this.wantedCount}");
 
             var deadKeys = new List<Rage.PoolHandle>();
             var threshold = DateTime.Now - TimeSpan.FromMinutes(minutes);
@@ -49,7 +48,7 @@
                 this.Entities.Remove(key);
             }
 
-            Rage.Game.LogTrivial($"  removed {deadKeys.Count} entries");
+            Rage.Game.LogTrivial($"  entries removed : {deadKeys.Count}");
         }
 
         /// <inheritdoc />

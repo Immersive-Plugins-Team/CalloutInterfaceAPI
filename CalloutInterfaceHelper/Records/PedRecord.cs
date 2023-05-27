@@ -1,4 +1,4 @@
-﻿namespace CalloutInterfaceHelper.Records
+﻿namespace CalloutInterfaceAPI.Records
 {
     using System;
     using LSPD_First_Response.Engine.Scripting.Entities;
@@ -35,7 +35,7 @@
         /// <summary>
         /// Gets the ped's first name.
         /// </summary>
-        public string First { get; internal set; } = string.Empty;
+        public string First { get; internal set; } = "John";
 
         /// <summary>
         /// Gets a value indicating whether or not the ped is male.
@@ -50,7 +50,7 @@
         /// <summary>
         /// Gets the peds last name.
         /// </summary>
-        public string Last { get; internal set; } = string.Empty;
+        public string Last { get; internal set; } = "Doe";
 
         /// <summary>
         /// Gets the license state.

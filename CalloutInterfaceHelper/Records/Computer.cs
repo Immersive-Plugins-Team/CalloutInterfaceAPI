@@ -1,8 +1,5 @@
-﻿namespace CalloutInterfaceHelper
+﻿namespace CalloutInterfaceAPI.Records
 {
-    using CalloutInterfaceHelper.API;
-    using CalloutInterfaceHelper.External;
-    using CalloutInterfaceHelper.Records;
     using LSPD_First_Response.Engine.Scripting.Entities;
 
     /// <summary>
@@ -56,7 +53,7 @@
         {
             if (vehicle)
             {
-                CalloutInterfaceFunctions.SendVehicle(vehicle);
+                Functions.SendVehicle(vehicle);
                 var record = VehicleDatabase.GetRecord(vehicle);
                 Events.RaisePlateCheckEvent(record, source);
             }
@@ -79,9 +76,10 @@
 
         /// <summary>
         /// Gets the Ped Persona for the owner of the vehicle.
+        /// NOTE: There isn't always a matching persona in the game.
         /// </summary>
         /// <param name="vehicle">The vehicle being looked up.</param>
-        /// <returns>The relevant persona.</returns>
+        /// <returns>The relevant persona if available.</returns>
         internal static Persona GetOwnerPersona(Rage.Vehicle vehicle)
         {
             if (!vehicle)

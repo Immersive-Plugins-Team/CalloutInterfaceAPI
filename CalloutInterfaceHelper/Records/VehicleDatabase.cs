@@ -1,10 +1,8 @@
-﻿namespace CalloutInterfaceHelper.Records
+﻿namespace CalloutInterfaceAPI.Records
 {
     using System;
     using System.Collections.Generic;
-    using CalloutInterfaceHelper.API;
-    using CalloutInterfaceHelper.External;
-    using Rage;
+    using CalloutInterfaceAPI.External;
 
     /// <summary>
     /// Represents a database of vehicle records.
@@ -21,9 +19,9 @@
         /// <inheritdoc />
         internal override void Prune(int minutes)
         {
-            Game.LogTrivial($"CalloutInterfaceHelper pruning vehicle data older than {minutes} minute(s)");
-            Game.LogTrivial($"  {this.Entities.Count} vehicles");
-            Game.LogTrivial($"  {this.invalidDocumentCount} invalid documents");
+            Rage.Game.LogTrivial($"CalloutInterfaceAPI pruning vehicle data older than {minutes} minute(s)");
+            Rage.Game.LogTrivial($"  total entries    : {this.Entities.Count}");
+            Rage.Game.LogTrivial($"  invalid documents: {this.invalidDocumentCount}");
 
             var deadKeys = new List<Rage.PoolHandle>();
             var threshold = DateTime.Now - TimeSpan.FromMinutes(minutes);
@@ -42,7 +40,7 @@
                 this.Entities.Remove(key);
             }
 
-            Game.LogTrivial($"  removed {deadKeys.Count} entries");
+            Rage.Game.LogTrivial($"  entries removed  : {deadKeys.Count}");
         }
 
         /// <summary>
@@ -81,7 +79,7 @@
         {
             if (!vehicle)
             {
-                return VehicleDocumentStatus.Unknown;
+                return VehicleDocumentStatus.Valid;
             }
 
             bool invalidDocumentRateExceeded = this.Entities.Count > 0 && (float)this.invalidDocumentCount / this.Entities.Count > this.MaxInvalidDocumentRate;
@@ -99,7 +97,7 @@
 
             if (!invalidDocumentRateExceeded)
             {
-                int random = RandomNumberGenerator.Next(0, 30);
+                int random = RandomNumberGenerator.Next(0, 20);
                 if (random == 7 || random == 12)
                 {
                     return VehicleDocumentStatus.Expired;

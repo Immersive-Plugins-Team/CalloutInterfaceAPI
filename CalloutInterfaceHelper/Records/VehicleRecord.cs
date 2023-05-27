@@ -1,4 +1,4 @@
-﻿namespace CalloutInterfaceHelper.Records
+﻿namespace CalloutInterfaceAPI.Records
 {
     using LSPD_First_Response.Engine.Scripting.Entities;
 
@@ -19,22 +19,22 @@
         /// <summary>
         /// Gets the vehicle's class.
         /// </summary>
-        public string Class { get; internal set; } = string.Empty;
+        public string Class { get; internal set; } = "Unknown";
 
         /// <summary>
         /// Gets the vehicle's color.
         /// </summary>
-        public string Color { get; internal set; } = string.Empty;
+        public string Color { get; internal set; } = "Unknown";
 
         /// <summary>
         /// Gets the vehicle insurance status.
         /// </summary>
-        public VehicleDocumentStatus InsuranceStatus { get; internal set; } = VehicleDocumentStatus.Unknown;
+        public VehicleDocumentStatus InsuranceStatus { get; internal set; } = VehicleDocumentStatus.Valid;
 
         /// <summary>
         /// Gets the vehicle's license plate.
         /// </summary>
-        public string LicensePlate { get; internal set; } = string.Empty;
+        public string LicensePlate { get; internal set; } = "Unknown";
 
         /// <summary>
         /// Gets the vehicle's license plate style.
@@ -44,17 +44,17 @@
         /// <summary>
         /// Gets the vehicle's make.
         /// </summary>
-        public string Make { get; internal set; } = string.Empty;
+        public string Make { get; internal set; } = "Unknown";
 
         /// <summary>
         /// Gets the vehicle's model.
         /// </summary>
-        public string Model { get; internal set; } = string.Empty;
+        public string Model { get; internal set; } = "Unknown";
 
         /// <summary>
         /// Gets the vehicle's owner.
         /// </summary>
-        public string OwnerName { get; internal set; } = string.Empty;
+        public string OwnerName { get; internal set; } = "Unknown";
 
         /// <summary>
         /// Gets the vehicle owner's persona.
@@ -64,6 +64,6 @@
         /// <summary>
         /// Gets the vehicle registration status.
         /// </summary>
-        public VehicleDocumentStatus RegistrationStatus { get; internal set; } = VehicleDocumentStatus.Unknown;
+        public VehicleDocumentStatus RegistrationStatus { get; internal set; } = VehicleDocumentStatus.Valid;
     }
 }

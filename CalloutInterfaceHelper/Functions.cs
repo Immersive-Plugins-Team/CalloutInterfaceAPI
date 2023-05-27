@@ -1,8 +1,10 @@
-﻿namespace CalloutInterfaceHelper.API
+﻿namespace CalloutInterfaceAPI
 {
     using System;
     using System.Collections.Generic;
     using System.Drawing;
+    using System.Linq;
+    using System.Runtime.CompilerServices;
     using Rage.Native;
 
     /// <summary>
@@ -10,12 +12,20 @@
     /// </summary>
     public static class Functions
     {
+        /// <summary>
+        /// Indicates whether the Callout Interface is available.
+        /// </summary>
+        public static readonly bool IsCalloutInterfaceAvailable;
+
         private static readonly List<ColorCondition> ColorTable;
-        private static DateTime lastDateTime = DateTime.Today + Rage.World.TimeOfDay;
-        private static DateTime nextDateTime = lastDateTime;
+        private static DateTime lastDateTime;
+        private static DateTime nextDateTime;
 
         static Functions()
         {
+            IsCalloutInterfaceAvailable = LSPD_First_Response.Mod.API.Functions.GetAllUserPlugins()
+                .Any(x => x.GetName().Name.Equals("CalloutInterface") && x.GetName().Version.CompareTo(new Version("1.4.0.0")) >= 0);
+
             ColorTable = new List<ColorCondition>()
             {
                 new ColorCondition((h, s, b) => b < 0.1f, "Black"),
@@ -33,6 +43,9 @@
                 new ColorCondition((h, s, b) => h < 270, "Blue"),
                 new ColorCondition((h, s, b) => h < 330, "Purple"),
             };
+
+            lastDateTime = DateTime.Today + Rage.World.TimeOfDay;
+            nextDateTime = lastDateTime;
         }
 
         /// <summary>
@@ -40,6 +53,7 @@
         /// </summary>
         /// <param name="color">The color.</param>
         /// <returns>A name of the color that is reasonably accurate.</returns>
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static string GetColorName(Color color)
         {
             var h = color.GetHue();
@@ -60,6 +74,7 @@
         /// Gets a consistent date time.
         /// </summary>
         /// <returns>A DateTime object that syncs with the in-game time of day and the current date.</returns>
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static DateTime GetDateTime()
         {
             nextDateTime = lastDateTime.Date + Rage.World.TimeOfDay;
@@ -70,6 +85,35 @@
 
             lastDateTime = nextDateTime;
             return nextDateTime;
+        }
+
+        /// <summary>
+        /// Sends a message to the Callout Interface.  Does not support color codes but it does support newlines (\n).
+        /// If CalloutInterface is not available, does nothing.
+        /// </summary>
+        /// <param name="callout">The callout associated with the message.</param>
+        /// <param name="message">The message to send.</param>
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public static void SendMessage(LSPD_First_Response.Mod.Callouts.Callout callout, string message)
+        {
+            if (IsCalloutInterfaceAvailable)
+            {
+                External.CalloutInterfaceInvoker.SendMessage(callout, message);
+            }
+        }
+
+        /// <summary>
+        /// Sends a vehicle for the external (non-MDT) plate display.
+        /// If CalloutInterface is not available, does nothing.
+        /// </summary>
+        /// <param name="vehicle">The targeted vehicle.</param>
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public static void SendVehicle(Rage.Vehicle vehicle)
+        {
+            if (vehicle && IsCalloutInterfaceAvailable)
+            {
+                External.CalloutInterfaceInvoker.SendVehicle(vehicle);
+            }
         }
 
         /// <summary>
