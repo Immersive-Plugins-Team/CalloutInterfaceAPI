@@ -29,7 +29,7 @@ namespace ExampleNamespace
 
 Note that the priority and agency are optional but you *must* provide a description.  The description is what will show up in the CalloutInterface log, so it should be concise and reflect the general nature of your callout.  It does not need to be unique.
 
-![Description Example](https://i.imgur.com/yX3GkKX.png)
+![Description Example](https://i.imgur.com/AaYSI1B.png)
 
 </br>
 
@@ -39,9 +39,9 @@ While your callout is active, you can send messages to the MDT.  You cannot use 
 
 ### Example
 ```cs
-CalloutInterfaceFunctions.SendMessage(this, "This is an example of a multi-line message.\nThis is the second line.\nPlease note, extremely long lines will be split up into chunks of no more than 60 characters.  The rest of this is just gibberish to demonstrate what it looks like.");
+CalloutInterfaceAPI.Functions.SendMessage(this, "This is an example of a multi-line message.\nThis is the second line.\nPlease note, extremely long lines will be split up into chunks of no more than 60 characters.  The rest of this is just gibberish to demonstrate what it looks like.");
 ```
-![Message Example](https://i.imgur.com/njrEWyR.png)
+![Message Example](https://i.imgur.com/gYnx9KZ.png)
 
 </br>
 
