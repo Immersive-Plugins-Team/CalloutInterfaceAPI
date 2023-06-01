@@ -15,7 +15,7 @@
 	<PropertyGroup>
 		<GeneratePackageOnBuild Condition="'$(Configuration)' == 'Release'">true</GeneratePackageOnBuild>
 		<PackageId>CalloutInterfaceAPI</PackageId>
-		<Version>1.0.1</Version>
+		<Version>1.0.2</Version>
 		<Authors>opus49</Authors>
 		<Company>Immersive Plugins Team</Company>
 		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
