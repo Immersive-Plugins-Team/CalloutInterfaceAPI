@@ -15,7 +15,7 @@
 	<PropertyGroup>
 		<GeneratePackageOnBuild Condition="'$(Configuration)' == 'Release'">true</GeneratePackageOnBuild>
 		<PackageId>CalloutInterfaceAPI</PackageId>
-		<Version>1.0.2</Version>
+		<Version>1.0.3</Version>
 		<Authors>opus49</Authors>
 		<Company>Immersive Plugins Team</Company>
 		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
@@ -51,6 +51,15 @@
 		<Reference Include="StopThePed">
 			<HintPath>..\..\..\lib\StopThePed.dll</HintPath>
 		</Reference>
+	</ItemGroup>
+
+	<ItemGroup>
+		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+			<_Parameter1>CalloutInterface</_Parameter1>
+		</AssemblyAttribute>
+		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+			<_Parameter1>GrammarPolice</_Parameter1>
+		</AssemblyAttribute>
 	</ItemGroup>
 
 	<ItemGroup>
