@@ -58,16 +58,16 @@
             if (ped)
             {
                 record.IsMale = ped.IsMale;
-                var persona = LSPD_First_Response.Mod.API.Functions.GetPersonaForPed(ped);
+                var persona = this.GetPersona(ped);
                 if (persona != null)
                 {
                     record.Advisory = persona.AdvisoryText;
                     record.Birthday = persona.Birthday;
                     record.Citations = persona.Citations;
                     record.First = persona.Forename;
-                    record.IsWanted = this.GetIsWanted(persona);
+                    record.IsWanted = persona.Wanted;
                     record.Last = persona.Surname;
-                    record.LicenseState = this.GetLicenseState(persona);
+                    record.LicenseState = persona.ELicenseState;
                     record.Persona = persona;
                 }
             }
@@ -77,27 +77,41 @@
             return record;
         }
 
-        private bool GetIsWanted(Persona persona)
+        private Persona GetPersona(Rage.Ped ped)
         {
-            if (persona.Wanted && this.Entities.Count > 0 && (float)this.wantedCount / this.Entities.Count > this.MaxWantedRate)
+            var persona = LSPD_First_Response.Mod.API.Functions.GetPersonaForPed(ped);
+            if (persona != null)
             {
-                persona.Wanted = false;
-            }
-
-            return persona.Wanted;
-        }
-
-        private ELicenseState GetLicenseState(Persona persona)
-        {
-            if (persona.ELicenseState == ELicenseState.Expired || persona.ELicenseState == ELicenseState.Suspended)
-            {
-                if (this.Entities.Count > 0 && (float)this.invalidLicenseCount / this.Entities.Count > this.MaxInvalidLicenseRate)
+                bool isPersonaChanged = false;
+                if (persona.Wanted && this.Entities.Count > 0 && (float)this.wantedCount / this.Entities.Count > this.MaxWantedRate)
                 {
-                    persona.ELicenseState = ELicenseState.Valid;
+                    persona.Wanted = false;
+                    isPersonaChanged = true;
+                }
+
+                if (persona.ELicenseState == ELicenseState.Expired || persona.ELicenseState == ELicenseState.Suspended)
+                {
+                    if (this.Entities.Count > 0 && (float)this.invalidLicenseCount / this.Entities.Count > this.MaxInvalidLicenseRate)
+                    {
+                        persona.ELicenseState = ELicenseState.Valid;
+                        isPersonaChanged = true;
+                    }
+                }
+
+                if (isPersonaChanged)
+                {
+                    try
+                    {
+                        LSPD_First_Response.Mod.API.Functions.SetPersonaForPed(ped, persona);
+                    }
+                    catch (Exception ex)
+                    {
+                        Rage.Game.LogTrivial($"CalloutInterfaceAPI encountered an error while setting a persona: {ex.Message}");
+                    }
                 }
             }
 
-            return persona.ELicenseState;
+            return persona;
         }
     }
 }
